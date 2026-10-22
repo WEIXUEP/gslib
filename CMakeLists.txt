@@ -22,10 +22,6 @@ if(GSLIB_CODE_PROTETION)
     message(FATAL_ERROR "GSLIB_CODE_PROTETION requires MSVC, a static library, and Release or MinSizeRel")
   endif()
   find_package(Python3 3.8 REQUIRED COMPONENTS Interpreter)
-  find_program(GSLIB_LLVM_AR llvm-ar HINTS "$ENV{IFORT_COMPILER25}/bin/compiler")
-  if(NOT GSLIB_LLVM_AR)
-    message(FATAL_ERROR "GSLIB_CODE_PROTETION requires llvm-ar; set GSLIB_LLVM_AR")
-  endif()
 endif()
 
 if(NOT STATIC AND NOT SHARED)
@@ -129,7 +125,7 @@ foreach(target IN LISTS gslib_targets)
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/protect_library.py"
         --library "$<TARGET_FILE:${target}>" --source-dir "${CMAKE_CURRENT_SOURCE_DIR}/src"
-        --ar "${GSLIB_LLVM_AR}"
+        --librarian "${CMAKE_AR}"
       VERBATIM COMMENT "Removing and verifying source/build information")
   endif()
 endforeach()

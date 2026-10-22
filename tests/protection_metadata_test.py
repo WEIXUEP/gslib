@@ -12,6 +12,33 @@ spec.loader.exec_module(protect)
 
 
 class ProtectionMetadataTest(unittest.TestCase):
+    @staticmethod
+    def archive_member(name, payload):
+        return (name.ljust(16, b" ") + b"0".ljust(12, b" ") + b"0".ljust(6, b" ")
+                + b"0".ljust(6, b" ") + b"0".ljust(8, b" ")
+                + str(len(payload)).encode("ascii").ljust(10, b" ") + b"`\n"
+                + payload + (b"\n" if len(payload) % 2 else b""))
+
+    def test_archive_skips_indices_and_names_and_handles_padding(self):
+        archive = b"!<arch>\n"
+        for name, payload in ((b"/", b"index"), (b"/", b"second"),
+                              (b"//", b"private/source.obj\0"),
+                              (b"/SYM64/", b"index64"),
+                              (b"/0", b"first"), (b"0/", b"second")):
+            archive += self.archive_member(name, payload)
+        self.assertEqual(protect.archive_objects(archive), [b"first", b"second"])
+
+    def test_malformed_archives_fail(self):
+        member = self.archive_member(b"0/", b"abc")
+        bad_size = member[:48] + b"invalid   " + member[58:]
+        for archive in (b"!<thin>\n", b"!<arch>\n", b"!<arch>\nshort",
+                        b"!<arch>\n" + member[:-2], b"!<arch>\n" + member[:-1],
+                        b"!<arch>\n" + bad_size,
+                        b"!<arch>\n" + self.archive_member(b"/", b"index")):
+            with self.subTest(archive=archive):
+                with self.assertRaises(RuntimeError):
+                    protect.archive_objects(archive)
+
     def test_codeview_keeps_layout_and_other_records(self):
         name = b"C:\\private\\unit.obj\0"
         objname = struct.pack("<HHI", 6+len(name), 0x1101, 0) + name

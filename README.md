@@ -54,9 +54,9 @@ Pass `-DGSLIB_CODE_PROTETION=ON` to CMake, or run
 `tools\build-msvc.cmd jom ON` (also accepts `nmake ON`), to remove source
 filenames and source/build paths from the static library. The spelling
 `PROTETION` is intentional. The option defaults to `OFF` and requires MSVC,
-a static x64 Release/MinSizeRel build, Python 3.8 or newer, and `llvm-ar`.
-The archive tool is found on `PATH` or in the installed Intel compiler tools;
-its path can also be set with `GSLIB_LLVM_AR`.
+a static x64 Release/MinSizeRel build, and Python 3.8 or newer. It uses
+MSVC's own `cl.exe` and `lib.exe`; no LLVM, Intel compiler, or obfuscating
+compiler is required. Python only cleans and checks file/path metadata.
 Diagnostics omit source locations, COFF file metadata is anonymized, and
 archive members use numeric identifiers. Each protected library is scanned
 before installation; remaining source filenames or build paths fail the
