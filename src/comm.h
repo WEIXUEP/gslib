@@ -167,7 +167,7 @@ static void comm_init_check_(struct comm *c, MPI_Fint ce, uint np,
                      "but not compiled with -DMPI",(unsigned)np);
 #endif
 }
-#define comm_init_check(c,ce,np) comm_init_check_(c,ce,np,__FILE__,__LINE__)
+#define comm_init_check(c,ce,np) comm_init_check_(c,ce,np,GS_FILE,__LINE__)
 
 
 static void comm_dup_(struct comm *d, const struct comm *s,
@@ -180,7 +180,7 @@ static void comm_dup_(struct comm *d, const struct comm *s,
   if(s->np!=1) fail(1,file,line,"%s not compiled with -DMPI\n",file);
 #endif
 }
-#define comm_dup(d,s) comm_dup_(d,s,__FILE__,__LINE__)
+#define comm_dup(d,s) comm_dup_(d,s,GS_FILE,__LINE__)
 
 static void comm_split_(const struct comm *s, int bin, int key, struct comm *d,
                         const char *file, unsigned line) {
@@ -193,7 +193,7 @@ static void comm_split_(const struct comm *s, int bin, int key, struct comm *d,
   if(s->np!=1) fail(1,file,line,"%s not compiled with -DMPI\n",file);
 #endif
 }
-#define comm_split(s, bin, key, d) comm_split_(s, bin, key, d, __FILE__, __LINE__)
+#define comm_split(s, bin, key, d) comm_split_(s, bin, key, d, GS_FILE, __LINE__)
 
 static void comm_free(struct comm *c)
 {

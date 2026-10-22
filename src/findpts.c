@@ -292,7 +292,7 @@ void ffindptsms_setup(sint *const handle,
     setupms_aux_3(fd, elx,n,*nel,m,*bbox_tol,
                 *loc_hash_size,*gbl_hash_size, *npt_max, *newt_tol, nsid, distfint,ims);
   } else
-    fail(1,__FILE__,__LINE__,
+    fail(1,GS_FILE,__LINE__,
          "findptsms_setup: ndim must be 2 or 3; given ndim=%u",(unsigned)h->ndim);
   *handle = handle_n++;
 }
@@ -349,7 +349,7 @@ void ffindpts_setup(sint *const handle,
     setupms_aux_3(fd, elx,n,*nel,m,*bbox_tol,
                 *loc_hash_size,*gbl_hash_size, *npt_max, *newt_tol, nsid, distfint,ims);
   } else
-    fail(1,__FILE__,__LINE__,
+    fail(1,GS_FILE,__LINE__,
          "findpts_setup: ndim must be 2 or 3; given ndim=%u",(unsigned)h->ndim);
   *handle = handle_n++;
 }
@@ -357,7 +357,7 @@ void ffindpts_setup(sint *const handle,
 #define CHECK_HANDLE(func) \
   struct handle *h; \
   if(*handle<0 || *handle>=handle_n || !(h=&handle_array[*handle])->data) \
-    fail(1,__FILE__,__LINE__,func ": invalid handle")
+    fail(1,GS_FILE,__LINE__,func ": invalid handle")
 
 void ffindptsms_free(const sint *const handle)
 {

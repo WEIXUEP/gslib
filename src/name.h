@@ -1,6 +1,12 @@
 #ifndef GS_NAME_H
 #define GS_NAME_H
 
+#ifdef GSLIB_CODE_PROTETION
+#  define GS_FILE ""
+#else
+#  define GS_FILE __FILE__
+#endif
+
 /* establishes some macros to establish
    * the FORTRAN naming convention
      default            gs_setup, etc.

@@ -14,6 +14,20 @@
 
 #define PI 3.1415926535897932384626433832795028841971693993751058209749445923
 
+static int interval_index(double x, int m)
+{
+  int j = m - 2 - (int)(acos(x) * (m-1) / PI);
+  /* rand() can return either endpoint, especially with MSVC's small RAND_MAX. */
+  if(j < 0) return 0;
+  if(j > m-2) return m-2;
+  return j;
+}
+
+static int outside_bounds(double value, double lo, double up)
+{
+  double tol = 64*DBL_EPSILON*(1+fabs(value)+fabs(lo)+fabs(up));
+  return value < lo-tol || value > up+tol;
+}
 
 int main()
 {
@@ -47,7 +61,7 @@ int main()
     int m = RESFAC*N;
     double x = (rand()/(double)RAND_MAX)*2-1;
     /* x = cos((m-1-j)*PI/(m-1)) */
-    int j = -1 + m - 1 - (int) (acos(x) * (m-1) / PI);
+    int j = interval_index(x,m);
     double f = (x - cos((m-1-j)*PI/(m-1))) /
                (cos((m-1-(j+1))*PI/(m-1)) - cos((m-1-j)*PI/(m-1)));
 
@@ -65,16 +79,16 @@ int main()
       double lo = (1-f)*lb[(i*m+j)*2  ] + f*lb[(i*m+j+1)*2  ],
              up = (1-f)*lb[(i*m+j)*2+1] + f*lb[(i*m+j+1)*2+1],
              px = tensor_dot(ld_N,p+i*N,N);
-      if(r<3 || px < lo || up < px)
+      if(r<3 || outside_bounds(px,lo,up))
         printf("p_%02d(%g) = %g in [%g,%g]\n",i,x,px,lo,up);
-      if(px<lo || up<px) {failure=1; break;}
+      if(outside_bounds(px,lo,up)) {failure=1; break;}
     }
     if(i!=NY) break;
   }
 
   /* x = cos((m-1-j)*PI/(m-1)) */
   #define GET_JF(x) \
-    int j##x = -1 + m##x - 1 - (int) (acos(x) * (m##x-1) / PI); \
+    int j##x = interval_index(x,m##x); \
     double f##x = (x - cos((m##x-1-j##x)*PI/(m##x-1))) / \
                 (cos((m##x-1-(j##x+1))*PI/(m##x-1)) \
                  - cos((m##x-1-j##x)*PI/(m##x-1)))
@@ -110,9 +124,9 @@ int main()
                 + (1-fx)*   fy *lb[((i*mx+jx  )*my+jy+1)*2+1]
                 +    fx *   fy *lb[((i*mx+jx+1)*my+jy+1)*2+1],
              pxy = tensor_i2(ld_N,N, ld_NY,NY, p+i*N*NY, work);
-      if(r<3 || pxy < lo || up < pxy)
+      if(r<3 || outside_bounds(pxy,lo,up))
         printf("p_%02d(%g,%g) = %g in [%g,%g]\n",i,x,y,pxy,lo,up);
-      if(pxy<lo || up<pxy) {failure=1; break;}
+      if(outside_bounds(pxy,lo,up)) {failure=1; break;}
     }
     if(i!=NZ) break;
 
@@ -162,9 +176,9 @@ int main()
                 + (1-fx)*   fy *   fz *lb[(((jx  )*my+jy+1)*mz+jz+1)*2+1]
                 +    fx *   fy *   fz *lb[(((jx+1)*my+jy+1)*mz+jz+1)*2+1],
              pxyz = tensor_i3(ld_N,N, ld_NY,NY, ld_NZ,NZ, p, work);
-      if(r<3 || pxyz < lo || up < pxyz)
+      if(r<3 || outside_bounds(pxyz,lo,up))
         printf("p(%g,%g,%g) = %g in [%g,%g]\n",x,y,z,pxyz,lo,up);
-      if(pxyz<lo || up<pxyz) failure=1;
+      if(outside_bounds(pxyz,lo,up)) failure=1;
     }
     if(failure) break;
 

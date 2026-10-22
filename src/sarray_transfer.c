@@ -163,7 +163,7 @@ uint sarray_transfer_many(
   if(!fixed) {
     n = num_rows(&cr->data,row_size);
     for(i=0;i<An;++i)
-      array_reserve_(A[i],n,size[i],__FILE__,__LINE__), A[i]->n=n;
+      array_reserve_(A[i],n,size[i],GS_FILE,__LINE__), A[i]->n=n;
   } else {
     uint max=A[0]->max, an;
     for(i=1;i<An;++i) if(A[i]->max<max) max=A[i]->max;

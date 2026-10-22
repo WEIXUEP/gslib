@@ -454,7 +454,7 @@ void sortv(T *out, const T *A, uint n, unsigned stride, buffer *restrict buf)
     } else {
       if(out==A) {
         if(stride!=sizeof(T))
-          fail(1,__FILE__,__LINE__,"in-place sort with non-unit stride");
+          fail(1,GS_FILE,__LINE__,"in-place sort with non-unit stride");
         heap_sortv(out,n);
       } else {
         buffer_reserve(buf,n*sizeof(T));
@@ -518,7 +518,7 @@ void sortv(T *out, const T *A, uint n, unsigned stride, buffer *restrict buf)
   } else {
     if(out==A) {
       if(stride!=sizeof(T))
-        fail(1,__FILE__,__LINE__,"in-place sort with non-unit stride");
+        fail(1,GS_FILE,__LINE__,"in-place sort with non-unit stride");
       heap_sortv(out,n);
     } else {
       buffer_reserve(buf,n*sizeof(T));

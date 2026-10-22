@@ -1,0 +1,38 @@
+#ifndef GSLIB_CONFIG_H
+#define GSLIB_CONFIG_H
+
+#ifndef GSLIB_CODE_PROTETION
+#cmakedefine GSLIB_CODE_PROTETION
+#endif
+#ifndef GSLIB_USE_MPI
+#cmakedefine GSLIB_USE_MPI
+#endif
+#ifndef GSLIB_UNDERSCORE
+#cmakedefine GSLIB_UNDERSCORE
+#endif
+#ifndef GSLIB_USE_USR_EXIT
+#cmakedefine GSLIB_USE_USR_EXIT
+#endif
+#ifndef GSLIB_USE_NBC
+#cmakedefine GSLIB_USE_NBC
+#endif
+#ifndef GSLIB_USE_CBLAS
+#cmakedefine GSLIB_USE_CBLAS
+#endif
+#ifndef GSLIB_USE_MKL
+#cmakedefine GSLIB_USE_MKL
+#endif
+#ifndef GSLIB_USE_NAIVE_BLAS
+#cmakedefine GSLIB_USE_NAIVE_BLAS
+#endif
+#ifndef GSLIB_USE_GLOBAL_LONG_LONG
+#define GSLIB_USE_GLOBAL_LONG_LONG
+#endif
+#ifndef GSLIB_PREFIX
+#define GSLIB_PREFIX @CPREFIX@
+#endif
+#ifndef GSLIB_FPREFIX
+#define GSLIB_FPREFIX @FPREFIX@
+#endif
+
+#endif

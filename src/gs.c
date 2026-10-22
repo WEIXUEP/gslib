@@ -38,7 +38,11 @@ GS_DEFINE_DOM_SIZES()
 typedef enum { mode_plain, mode_vec, mode_many,
                mode_dry_run } gs_mode;
 
+#ifdef _MSC_VER
+static __declspec(thread) buffer static_buffer = null_buffer;
+#else
 static _Thread_local buffer static_buffer = null_buffer;
+#endif
 
 static void gather_noop(
   void *out, const void *in, const unsigned vn,
@@ -1552,7 +1556,7 @@ void fgs_setup(sint *handle, const slong id[], const sint *n,
 static void fgs_check_handle(sint handle, const char *func, unsigned line)
 {
   if(handle<0 || handle>=fgs_n || !fgs_info[handle])
-    fail(1,__FILE__,line,"%s: invalid handle", func);
+    fail(1,GS_FILE,line,"%s: invalid handle", func);
 }
 
 static const gs_dom fgs_dom[4] = { gs_float, gs_double, gs_sint, gs_slong };
@@ -1561,9 +1565,9 @@ static void fgs_check_parms(sint handle, sint dom, sint op,
                             const char *func, unsigned line)
 {
   if(dom<1 || dom>3)
-    fail(1,__FILE__,line,"%s: datatype %d not in valid range 1-3",func,dom);
+    fail(1,GS_FILE,line,"%s: datatype %d not in valid range 1-3",func,dom);
   if(op <1 || op >4)
-    fail(1,__FILE__,line,"%s: op %d not in valid range 1-4",func,op);
+    fail(1,GS_FILE,line,"%s: op %d not in valid range 1-4",func,op);
   fgs_check_handle(handle,func,line);
 }
 

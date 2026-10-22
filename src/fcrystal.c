@@ -99,7 +99,7 @@ void fcrystal_setup(sint *handle, const MPI_Fint *comm, const sint *np)
 
 #define CHECK_HANDLE(func) do \
   if(*handle<0 || *handle>=handle_n || !handle_array[*handle]) \
-    fail(1,__FILE__,__LINE__,func ": invalid handle"); \
+    fail(1,GS_FILE,__LINE__,func ": invalid handle"); \
 while(0)
 
 void fcrystal_ituple_sort(const sint *handle,
@@ -137,7 +137,7 @@ void fcrystal_tuple_sort(const sint *const handle, const sint *const n,
   while(--nk>=0) {
     sint k = keys[nk]-1;
     if(k<0 || k>=*mi+*ml)
-      fail(1,__FILE__,__LINE__,"crystal_tuple_sort: invalid key");
+      fail(1,GS_FILE,__LINE__,"crystal_tuple_sort: invalid key");
     else if(k<*mi) sortp     (buf,init, (uint *)&Ai[k],    *n,size_i);
     else           sortp_long(buf,init, (ulong*)&Al[k-*mi],*n,size_l);
     init=1;

@@ -89,11 +89,11 @@ static inline void *srealloc(
 }
 
 #define tmalloc(type, count) \
-  ((type*) smalloc((count)*sizeof(type),__FILE__,__LINE__) )
+  ((type*) smalloc((count)*sizeof(type),GS_FILE,__LINE__) )
 #define tcalloc(type, count) \
-  ((type*) scalloc((count),sizeof(type),__FILE__,__LINE__) )
+  ((type*) scalloc((count),sizeof(type),GS_FILE,__LINE__) )
 #define trealloc(type, ptr, count) \
-  ((type*) srealloc((ptr),(count)*sizeof(type),__FILE__,__LINE__) )
+  ((type*) srealloc((ptr),(count)*sizeof(type),GS_FILE,__LINE__) )
 
 #if PRINT_MALLOCS
 static inline void sfree(void *restrict ptr, const char *file, unsigned line)
@@ -102,7 +102,7 @@ static inline void sfree(void *restrict ptr, const char *file, unsigned line)
   fprintf(stdout,"MEM: proc %04d: %p freed @ %s(%u)\n",
           (int)comm_gbl_id,ptr,file,line), fflush(stdout);
 }
-#define free(x) sfree(x,__FILE__,__LINE__)
+#define free(x) sfree(x,GS_FILE,__LINE__)
 #endif
 
 /*--------------------------------------------------------------------------
@@ -133,9 +133,9 @@ static void *array_reserve_(struct array *a, size_t min, size_t size,
 }
 
 #define array_free(a) (free((a)->ptr))
-#define array_init(T,a,max) array_init_(a,max,sizeof(T),__FILE__,__LINE__)
-#define array_resize(T,a,max) array_resize_(a,max,sizeof(T),__FILE__,__LINE__)
-#define array_reserve(T,a,min) array_reserve_(a,min,sizeof(T),__FILE__,__LINE__)
+#define array_init(T,a,max) array_init_(a,max,sizeof(T),GS_FILE,__LINE__)
+#define array_resize(T,a,max) array_resize_(a,max,sizeof(T),GS_FILE,__LINE__)
+#define array_reserve(T,a,min) array_reserve_(a,min,sizeof(T),GS_FILE,__LINE__)
 
 static void array_cat_(size_t size, struct array *d, const void *s, size_t n,
                        const char *file, unsigned line)
@@ -145,7 +145,7 @@ static void array_cat_(size_t size, struct array *d, const void *s, size_t n,
   d->n+=n;
 }
 
-#define array_cat(T,d,s,n) array_cat_(sizeof(T),d,s,n,__FILE__,__LINE__)
+#define array_cat(T,d,s,n) array_cat_(sizeof(T),d,s,n,GS_FILE,__LINE__)
 
 /*--------------------------------------------------------------------------
    Buffer = char array
@@ -162,6 +162,8 @@ typedef struct array buffer;
   --------------------------------------------------------------------------*/
 #if __cplusplus >= 201103L 
 #define ALIGNOF(T) alignof(T)
+#elif defined(_MSC_VER)
+#define ALIGNOF(T) __alignof(T)
 #else
 #define ALIGNOF(T) offsetof(struct { char c; T x; }, x)
 #endif

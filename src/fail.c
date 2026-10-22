@@ -31,7 +31,11 @@ void vdiagnostic(const char *prefix, const char *file, unsigned line,
                  const char *fmt, va_list ap)
 {
   static char buf[2048]; int n,na,i=0;
+#ifdef GSLIB_CODE_PROTETION
+  sprintf(buf,"%s(proc %04d): ",prefix,(int)comm_gbl_id);
+#else
   sprintf(buf,"%s(proc %04d, %s:%d): ",prefix,(int)comm_gbl_id,file,line);
+#endif
   vsprintf(buf+strlen(buf),fmt,ap);
   strcat(buf,"\n");
   n=strlen(buf);
